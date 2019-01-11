@@ -15,43 +15,7 @@ type IOSCredential struct {
 	Subtitle         string
 	Message          string
 	Sound            string
-}​
-3
-```go
-4
-func readPrivateKey(filepath string) (*ecdsa.PrivateKey, error) {
-5
-        file, err := ioutil.ReadFile(filepath)
-6
-        if err != nil {
-7
-                return nil, err
-8
-        }
-9
-        block, _ := pem.Decode(file)
-10
-​
-11
-        key, err := x509.ParsePKCS8PrivateKey(block.Bytes)
-12
-        if err != nil {
-13
-                return nil, err
-14
-        }
-15
-        if privateKey, ok := key.(*ecdsa.PrivateKey); ok {
-16
-                return privateKey, nil
-17
-        }
-18
-        return nil, errors.New("")
-19
 }
-20
-```
 ```
 Call APNPushNotification method and pass reference of IOSCredential struct
 ```go
@@ -74,4 +38,3 @@ Call FCMPushNotification method and pass reference of AndroidCredential struct
 ```go
 func (reqData AndroidCredential) FCMPushNotification() (*Response, error) {
 ```
-
