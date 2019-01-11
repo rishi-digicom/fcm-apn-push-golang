@@ -1,31 +1,59 @@
-# fcm-and-apn-push-notification
+# Golang push notification with FCM and APN.
 
-<pre>
-POST http://localhost:4002/sendPushNotification
-{
-	"device_type":"ios", // required | "ios" or "android"
-	"device_token":"YOUR DEVICE TOKEN", // required
-	"title":"test notification", // required
-	"sub_title":"this is sub title", // optional
-	"message":"this is test message", // optional
-	"sound":"default" // optional
+```go
+func readPrivateKey(filepath string) (*ecdsa.PrivateKey, error) {
+	file, err := ioutil.ReadFile(filepath)
+	if err != nil {
+		return nil, err
+	}
+	block, _ := pem.Decode(file)
+
+	key, err := x509.ParsePKCS8PrivateKey(block.Bytes)
+	if err != nil {
+		return nil, err
+	}
+	if privateKey, ok := key.(*ecdsa.PrivateKey); ok {
+		return privateKey, nil
+	}
+	return nil, errors.New("")
 }
-</pre>
+```
+How to use:
 
-## Required Dependencies
-- github.com/julienschmidt/httprouter
-- crypto/ecdsa
-- crypto/x509
-- encoding/pem
-- github.com/dgrijalva/jwt-go
-- encoding/json
-
-## install go build
+For push notification for iOS use IOSCredential struct 
 ```go
-go install fcm-and-apn-push-notification
+type IOSCredential struct {
+	Send_box         bool
+	Key_id           string
+	P8_file_path     string
+	Issuer_claim_key string
+	Apn_topics       string
+	Device_token     string
+	Title            string
+	Subtitle         string
+	Message          string
+	Sound            string
+}
+```
+Call APNPushNotification method and pass reference of IOSCredential struct
+```go
+func (reqData IOSCredential) APNPushNotification() (*Response, error) {
 ```
 
-## go run
+For push notification for android use AndroidCredential struct 
 ```go
-go run main.go -http=":4001"
+type AndroidCredential struct {
+	Server_key   string
+	Device_token string
+	Title        string
+	Subtitle     string
+	Message      string
+	Sound        string
+}
 ```
+
+Call FCMPushNotification method and pass reference of AndroidCredential struct
+```go
+func (reqData AndroidCredential) FCMPushNotification() (*Response, error) {
+```
+
