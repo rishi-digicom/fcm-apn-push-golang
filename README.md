@@ -2,7 +2,7 @@
 
 How to use:
 
-For push notification for iOS use IOSCredential struct 
+For push notification for iOS with support of p8 file, use IOSCredential struct 
 ```go
 type IOSCredential struct {
 	Send_box         bool
@@ -15,11 +15,30 @@ type IOSCredential struct {
 	Subtitle         string
 	Message          string
 	Sound            string
+	Badge 		 int
 }
 ```
 Call APNPushNotification method and pass reference of IOSCredential struct
 ```go
 func (reqData IOSCredential) APNPushNotification() (*Response, error) {
+```
+For push notification for iOS with support of PEM file, use IOSCredentialWithCert struct 
+```go
+type IOSCredentialWithCert struct {
+	Send_box      bool
+	PEM_file_path string
+	Apn_topics    string
+	Badge         int
+	Device_token  string
+	Title         string
+	Subtitle      string
+	Message       string
+	Sound         string
+}
+```
+Call APNPushNotificationPEM method and pass reference of IOSCredentialWithCert struct
+```go
+func (reqData IOSCredentialWithCert) APNPushNotificationPEM() (*Response, error) {
 ```
 
 For push notification for android use AndroidCredential struct 
